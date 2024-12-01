@@ -1,0 +1,3 @@
+#!/bin/bash
+
+g++ SDL_Visor/SDL_Visor.cpp  Metodo_grafico.c++ -o Metodo_grafico -lSDL2 -lSDL2_image -lSDL2_ttf && ./Metodo_grafico
