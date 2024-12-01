@@ -1,0 +1,15 @@
+#!/bin/fish
+
+
+switch $argv[1]
+    case 'llvm'
+        clang++ metodo_grafico.c++ -o metodo_grafico ../SDL_Visor/SDL_Visor.cpp -lSDL2 -lSDL2_image -lSDL2_ttf
+    case 'g++'
+        g++ metodo_grafico.c++ ../SDL_Visor/SDL_Visor.cpp -o metodo_grafico -lSDL2 -lSDL2_image -lSDL2_ttf && ./metodo_grafico
+end
+
+
+
+
+
+
