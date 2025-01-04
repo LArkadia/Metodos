@@ -4,6 +4,7 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include <fstream>
 
 std::map<String, vsr::Color*> Init_colors();
 std::vector<vsr::Color*> Init_colors_numeric();
@@ -21,35 +22,73 @@ struct GraphParameters {
 GraphParameters Crear_grafica_fondo(vsr::Screen* window, std::vector<PSR::Ecuation*> sistema);
 void Graficar_ecuacion(vsr::Screen* window, PSR::Ecuation* ecuacion, vsr::Color* color, GraphParameters& params);
 void Achurar_region_no_factible(vsr::Screen* window, PSR::Ecuation* ecuacion, vsr::Color* color, GraphParameters& params);
+void Calcular_punto_optimo(vsr::Screen* window, const std::vector<PSR::Ecuation*>& sistema, const std::vector<vsr::Color*>& colores_numeric, GraphParameters& params);
 
 auto colores = Init_colors();
 auto colores_numerico = Init_colors_numeric();
 
+std::ofstream debugfile("debug.txt"); // Abre el archivo en modo de escritura (sobrescribe si existe)
+
 int main() {
+    // Inicializar las tablas de colores
+    std::map<String, vsr::Color*> colores = Init_colors();
+    std::vector<vsr::Color*> colores_numerico = Init_colors_numeric();
+
+    // Obtener el sistema de ecuaciones
     auto sistema = Obtener_sistema();
 
-    vsr::Screen window("Método gráfico de solución", 800, 800, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+    // Inicializar la ventana
+    vsr::Screen window("Método gráfico de solución", 1000, 800, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     window.Init_TTF("NotoSans", "../SDL_Visor/fonts/NotoSans/NotoSans-Thin.ttf", 15);
 
+    // Crear la gráfica de fondo
     auto graph_params = Crear_grafica_fondo(&window, sistema);
 
+    // Verificar que haya suficientes colores numéricos para las ecuaciones
+    size_t num_ecuaciones = sistema.size() - 1; // Excluyendo la ecuación objetivo en posición 0
+    if (colores_numerico.size() < num_ecuaciones + 1) { // +1 para verde limón
+        // Manejar el caso donde no hay suficientes colores
+        size_t original_size = colores_numerico.size();
+        for (size_t i = original_size; i < num_ecuaciones + 1; ++i) {
+            colores_numerico.push_back(colores_numerico[i % original_size]);
+        }
+    }
 
+    // Bucle principal
     while (window.Handle_events()) {
+        // Dibujar el fondo de la gráfica
         window.Draw_saved_texture("bg", nullptr);
 
         // Achurar la región no factible para cada restricción
         for (size_t i = 1; i < sistema.size(); ++i) {
-            Achurar_region_no_factible(&window, sistema[i],colores_numerico[i], graph_params);
+            // Asignar el color correspondiente a la ecuación
+            vsr::Color* color_actual = colores_numerico[i - 1];
+            Achurar_region_no_factible(&window, sistema[i], color_actual, graph_params);
         }
 
         // Graficar las ecuaciones del sistema, excluyendo la ecuación objetivo en posición 0
         for (size_t i = 1; i < sistema.size(); ++i) {
-            // Usar colores diferentes para cada ecuación si lo deseas
-            Graficar_ecuacion(&window, sistema[i], colores_numerico[i], graph_params);
+            // Asignar el mismo color correspondiente a la ecuación
+            vsr::Color* color_actual = colores_numerico[i - 1];
+            Graficar_ecuacion(&window, sistema[i], color_actual, graph_params);
         }
 
+        // Calcular y dibujar el punto óptimo
+        Calcular_punto_optimo(&window, sistema, colores_numerico, graph_params);
+
+        // Presentar el renderizador
         window.Present_renderer();
-        SDL_Delay(100);
+
+        // Control de la velocidad de actualización
+        SDL_Delay(1000);
+    }
+
+    // Liberar la memoria de los colores
+    for (auto& pair : colores) {
+        delete pair.second;
+    }
+    for (auto color_ptr : colores_numerico) {
+        delete color_ptr;
     }
 
     return 0;
@@ -109,10 +148,10 @@ GraphParameters Crear_grafica_fondo(vsr::Screen* window, std::vector<PSR::Ecuati
     window->Create_texture("bg", width, height);
 
     // Definir el área de la cuadrícula
-    int grid_x_start = 40;
+    int grid_x_start = 60;
     int grid_y_start = 0;
     int grid_width = width - grid_x_start;
-    int grid_height = height - 20;
+    int grid_height = height - 30;
 
     // Analizar las ecuaciones para encontrar los valores máximos en X y Y
     float max_x = 0.0f;
@@ -335,6 +374,160 @@ void Achurar_region_no_factible(vsr::Screen* window, PSR::Ecuation* ecuacion, vs
             }
         }
     }
+}
+void Calcular_punto_optimo(vsr::Screen *window, 
+                           const std::vector<PSR::Ecuation *> &sistema, 
+                           const std::vector<vsr::Color *> &colores_numeric, 
+                           GraphParameters &params) {
+    // Abrir el archivo de depuración en modo de añadir
+    std::ofstream debugfile("debug.txt", std::ios::app);
+    if (!debugfile.is_open()) {
+        std::cerr << "Error al abrir debug.txt para escritura." << std::endl;
+        return;
+    }
+
+    std::vector<Point> vertices;
+
+    // Encontrar todas las intersecciones de pares de ecuaciones
+    for (size_t i = 0; i < sistema.size(); ++i) {
+        for (size_t j = i + 1; j < sistema.size(); ++j) {
+            float a1 = sistema[i]->get_x1();
+            float b1 = sistema[i]->get_x2();
+            float c1 = sistema[i]->get_result();
+
+            float a2 = sistema[j]->get_x1();
+            float b2 = sistema[j]->get_x2();
+            float c2 = sistema[j]->get_result();
+
+            // Calcular el determinante
+            float det = a1 * b2 - a2 * b1;
+            if (std::abs(det) < 1e-6) {
+                // Las líneas son paralelas o coincidentes
+                continue;
+            }
+
+            // Calcular el punto de intersección
+            float x = (c1 * b2 - c2 * b1) / det;
+            float y = (a1 * c2 - a2 * c1) / det;
+
+            // Crear el punto
+            Point p = { x, y };
+            debugfile << "Intersección encontrada: (" << p.x << ", " << p.y << ")\n";
+            vertices.push_back(p);
+        }
+    }
+
+    // Filtrar los puntos que están dentro de la región factible
+    std::vector<Point> puntos_factibles;
+    for (const auto& p : vertices) {
+        bool es_factible = true;
+        // Omitir la primera ecuación (índice 0) ya que es la función a maximizar
+        for (size_t k = 1; k < sistema.size(); ++k) {
+            const auto& ecuacion = sistema[k];
+            float lhs = ecuacion->get_x1() * p.x + ecuacion->get_x2() * p.y;
+            float rhs = ecuacion->get_result();
+            char op = ecuacion->get_operator();
+
+            debugfile << "Evaluando punto (" << p.x << ", " << p.y << ") contra ecuación " << k << ": ";
+            debugfile << lhs << " " << op << " " << rhs << " -> ";
+
+            if (op == '<') {
+                if (!(lhs <= rhs + 1e-6)) { // Tolerancia ajustada a 1e-6
+                    es_factible = false;
+                    debugfile << "No cumple con <\n";
+                    break;
+                }
+            }
+            else if (op == '>') {
+                if (!(lhs >= rhs - 1e-6)) { // Tolerancia ajustada a 1e-6
+                    es_factible = false;
+                    debugfile << "No cumple con >\n";
+                    break;
+                }
+            }
+            else if (op == '=') {
+                if (!(std::abs(lhs - rhs) <= 1e-6)) { // Tolerancia ajustada a 1e-6
+                    es_factible = false;
+                    debugfile << "No cumple con =\n";
+                    break;
+                }
+            }
+            debugfile << "Cumple\n";
+        }
+
+        if (es_factible) {
+            // Verificar si el punto está dentro de los límites de la gráfica
+            debugfile << "Punto factible: (" << p.x << ", " << p.y << ")\n";
+            if (p.x >= 0 && p.x <= params.x_units && p.y >= 0 && p.y <= params.y_units) {
+                puntos_factibles.push_back(p);
+                debugfile << "Añadido a puntos_factibles.\n";
+            }
+            else {
+                debugfile << "Fuera de los límites de la gráfica.\n";
+            }
+        }
+    }
+
+    if (puntos_factibles.empty()) {
+        // No hay puntos factibles
+        debugfile << "Sin puntos factibles.\n";
+        debugfile.close();
+        return;
+    }
+
+    // Seleccionar el punto de maximización (más arriba y a la derecha)
+    Point optimo_max = puntos_factibles[0];
+    float max_sum = optimo_max.x + optimo_max.y;
+
+    // Seleccionar el punto de minimización (más abajo y a la izquierda)
+    Point optimo_min = puntos_factibles[0];
+    float min_sum = optimo_min.x + optimo_min.y;
+
+    for (const auto& p : puntos_factibles) {
+        float current_sum = p.x + p.y;
+        if (current_sum > max_sum) {
+            max_sum = current_sum;
+            optimo_max = p;
+        }
+        if (current_sum < min_sum) {
+            min_sum = current_sum;
+            optimo_min = p;
+        }
+    }
+
+    debugfile << "Punto de maximización: (" << optimo_max.x << ", " << optimo_max.y << ")\n";
+    debugfile << "Punto de minimización: (" << optimo_min.x << ", " << optimo_min.y << ")\n";
+
+    // Convertir los puntos óptimos a coordenadas de píxeles
+    int x_pixel_max = params.grid_x_start + static_cast<int>(optimo_max.x * params.pixels_per_unit_x);
+    int y_pixel_max = params.grid_y_start + params.grid_height - static_cast<int>(optimo_max.y * params.pixels_per_unit_y);
+
+    int x_pixel_min = params.grid_x_start + static_cast<int>(optimo_min.x * params.pixels_per_unit_x);
+    int y_pixel_min = params.grid_y_start + params.grid_height - static_cast<int>(optimo_min.y * params.pixels_per_unit_y);
+
+    // Definir los colores rojo y azul
+    if (colores_numeric.size() < 3) { // Asegurarse de que los índices 0 y 2 existan
+        debugfile << "No hay suficientes colores en colores_numeric.\n";
+        debugfile.close();
+        return;
+    }
+    vsr::Color* rojo = colores_numeric[0]; // Rojo en índice 0
+    vsr::Color* azul = colores_numeric[2]; // Azul en índice 2
+
+    // Definir el tamaño y la resolución de los círculos
+    uint16_t radio = 10;
+    uint16_t resolucion = 32; // Número de segmentos para el círculo
+
+    // Dibujar el círculo en el punto de maximización (rojo)
+    window->Draw_circle(x_pixel_max, y_pixel_max, radio, resolucion, *rojo);
+    debugfile << "Círculo rojo dibujado en (" << x_pixel_max << ", " << y_pixel_max << ")\n";
+
+    // Dibujar el círculo en el punto de minimización (azul)
+    window->Draw_circle(x_pixel_min, y_pixel_min, radio, resolucion, *azul);
+    debugfile << "Círculo azul dibujado en (" << x_pixel_min << ", " << y_pixel_min << ")\n";
+
+    // Cerrar el archivo de depuración
+    debugfile.close();
 }
 /*
 void Achurar_region_no_factible(vsr::Screen* window, PSR::Ecuation* ecuacion, vsr::Color* color, GraphParameters& params) {
