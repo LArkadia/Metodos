@@ -2,8 +2,11 @@
 #include "parser.cpp"
 #include <map>
 #include <cmath>
+#include <algorithm>
+#include <vector>
 
 std::map<String, vsr::Color*> Init_colors();
+std::vector<vsr::Color*> Init_colors_numeric();
 std::vector<PSR::Ecuation*> Obtener_sistema();
 struct GraphParameters {
     int grid_x_start;
@@ -20,27 +23,29 @@ void Graficar_ecuacion(vsr::Screen* window, PSR::Ecuation* ecuacion, vsr::Color*
 void Achurar_region_no_factible(vsr::Screen* window, PSR::Ecuation* ecuacion, vsr::Color* color, GraphParameters& params);
 
 auto colores = Init_colors();
+auto colores_numerico = Init_colors_numeric();
 
 int main() {
     auto sistema = Obtener_sistema();
 
-    vsr::Screen window("Método gráfico de solución", 900, 800, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+    vsr::Screen window("Método gráfico de solución", 800, 800, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     window.Init_TTF("NotoSans", "../SDL_Visor/fonts/NotoSans/NotoSans-Thin.ttf", 15);
 
     auto graph_params = Crear_grafica_fondo(&window, sistema);
+
 
     while (window.Handle_events()) {
         window.Draw_saved_texture("bg", nullptr);
 
         // Achurar la región no factible para cada restricción
         for (size_t i = 1; i < sistema.size(); ++i) {
-            Achurar_region_no_factible(&window, sistema[i],colores["rojo"], graph_params);
+            Achurar_region_no_factible(&window, sistema[i],colores_numerico[i], graph_params);
         }
 
         // Graficar las ecuaciones del sistema, excluyendo la ecuación objetivo en posición 0
         for (size_t i = 1; i < sistema.size(); ++i) {
             // Usar colores diferentes para cada ecuación si lo deseas
-            Graficar_ecuacion(&window, sistema[i], colores["azul"], graph_params);
+            Graficar_ecuacion(&window, sistema[i], colores_numerico[i], graph_params);
         }
 
         window.Present_renderer();
@@ -60,6 +65,22 @@ std::map<String, vsr::Color*> Init_colors() {
         {"azul", new vsr::Color(0, 0, 255, 255)},
         {"aqua", new vsr::Color(0, 100, 100, 255)},
         {"cyan", new vsr::Color(0, 255, 255, 255)}
+    });
+}
+
+std::vector<vsr::Color*> Init_colors_numeric() {
+    return std::vector<vsr::Color*>({
+        new vsr::Color(255, 0, 0, 255),      // Rojo
+        new vsr::Color(0, 255, 0, 255),      // Verde
+        new vsr::Color(0, 0, 255, 255),      // Azul
+        new vsr::Color(255, 165, 0, 255),    // Naranja
+        new vsr::Color(128, 0, 128, 255),    // Púrpura
+        new vsr::Color(0, 255, 255, 255),    // Cian
+        new vsr::Color(255, 192, 203, 255),  // Rosa
+        new vsr::Color(128, 128, 128, 255),  // Gris
+        new vsr::Color(255, 255, 0, 255),    // Amarillo
+        new vsr::Color(0, 128, 0, 255)       // Verde Oscuro
+        // Agrega más colores si es necesario
     });
 }
 
@@ -120,7 +141,7 @@ GraphParameters Crear_grafica_fondo(vsr::Screen* window, std::vector<PSR::Ecuati
     max_x *= 1.1f;
     max_y *= 1.1f;
 
-    // Dividir los ejes en 50 divisiones
+    // Dividir los ejes en 20 divisiones
     int divisions = 20;
 
     // Calcular unidades por división
@@ -200,57 +221,76 @@ GraphParameters Crear_grafica_fondo(vsr::Screen* window, std::vector<PSR::Ecuati
     return params;
 }
 
+struct Point {
+    float x;
+    float y;
+};
+
 void Graficar_ecuacion(vsr::Screen* window, PSR::Ecuation* ecuacion, vsr::Color* color, GraphParameters& params) {
     // Obtener los coeficientes de la ecuación
     float a = ecuacion->get_x1();
     float b = ecuacion->get_x2();
     float c = ecuacion->get_result();
 
-    // Encontrar dos puntos para dibujar la línea
-    float x1 = 0, y1 = 0;
-    float x2 = 0, y2 = 0;
+    // Lista para almacenar puntos de intersección válidos
+    std::vector<Point> puntos;
 
+    // Intersección con el eje X (y = 0)
+    if (a != 0) {
+        float x = c / a;
+        if (x >= 0 && x <= params.x_units) {
+            puntos.push_back(Point{ x, 0 });
+        }
+    }
+
+    // Intersección con el eje Y (x = 0)
     if (b != 0) {
-        // Cuando x1 = 0
-        x1 = 0;
-        y1 = c / b;
+        float y = c / b;
+        if (y >= 0 && y <= params.y_units) {
+            puntos.push_back(Point{ 0, y });
+        }
+    }
 
-        // Cuando x1 = max_x
-        x2 = params.x_units;
-        y2 = (c - a * x2) / b;
-    } else if (a != 0) {
-        // Cuando x2 = 0
-        y1 = 0;
-        x1 = c / a;
+    // Intersección con el límite superior de Y (y = max_y)
+    if (a != 0) {
+        float x = (c - b * params.y_units) / a;
+        if (x >= 0 && x <= params.x_units) {
+            puntos.push_back(Point{ x, params.y_units });
+        }
+    }
 
-        // Cuando x2 = max_y
-        y2 = params.y_units;
-        x2 = (c - b * y2) / a;
-    } else {
-        // Caso especial: a y b son cero, no se puede graficar
+    // Intersección con el límite derecho de X (x = max_x)
+    if (b != 0) {
+        float y = (c - a * params.x_units) / b;
+        if (y >= 0 && y <= params.y_units) {
+            puntos.push_back(Point{ params.x_units, y });
+        }
+    }
+
+    // Eliminar puntos duplicados (en caso de que la recta pase por un vértice)
+    std::sort(puntos.begin(), puntos.end(), [](const Point& p1, const Point& p2) {
+        return (p1.x < p2.x) || (p1.x == p2.x && p1.y < p2.y);
+    });
+    puntos.erase(std::unique(puntos.begin(), puntos.end(), [](const Point& p1, const Point& p2) {
+        return (std::abs(p1.x - p2.x) < 1e-6) && (std::abs(p1.y - p2.y) < 1e-6);
+    }), puntos.end());
+
+    // Verificar que haya al menos dos puntos para dibujar la línea
+    if (puntos.size() < 2) {
+        // No se puede dibujar una línea válida
         return;
     }
 
-    // Asegurarse de que los puntos estén dentro del rango
-    if (y1 < 0 || y1 > params.y_units) {
-        y1 = std::max(0.0f, std::min(y1, params.y_units));
-    }
-    if (y2 < 0 || y2 > params.y_units) {
-        y2 = std::max(0.0f, std::min(y2, params.y_units));
-    }
-    if (x1 < 0 || x1 > params.x_units) {
-        x1 = std::max(0.0f, std::min(x1, params.x_units));
-    }
-    if (x2 < 0 || x2 > params.x_units) {
-        x2 = std::max(0.0f, std::min(x2, params.x_units));
-    }
+    // Tomar los dos primeros puntos válidos
+    Point p1 = puntos[0];
+    Point p2 = puntos[1];
 
     // Convertir a coordenadas de píxeles
-    int x_pixel_1 = params.grid_x_start + static_cast<int>(x1 * params.pixels_per_unit_x);
-    int y_pixel_1 = params.grid_y_start + params.grid_height - static_cast<int>(y1 * params.pixels_per_unit_y);
+    int x_pixel_1 = params.grid_x_start + static_cast<int>(p1.x * params.pixels_per_unit_x);
+    int y_pixel_1 = params.grid_y_start + params.grid_height - static_cast<int>(p1.y * params.pixels_per_unit_y);
 
-    int x_pixel_2 = params.grid_x_start + static_cast<int>(x2 * params.pixels_per_unit_x);
-    int y_pixel_2 = params.grid_y_start + params.grid_height - static_cast<int>(y2 * params.pixels_per_unit_y);
+    int x_pixel_2 = params.grid_x_start + static_cast<int>(p2.x * params.pixels_per_unit_x);
+    int y_pixel_2 = params.grid_y_start + params.grid_height - static_cast<int>(p2.y * params.pixels_per_unit_y);
 
     // Dibujar la línea de la ecuación
     window->Draw_line_pos(
@@ -258,7 +298,6 @@ void Graficar_ecuacion(vsr::Screen* window, PSR::Ecuation* ecuacion, vsr::Color*
         x_pixel_2, y_pixel_2,
         *color);
 }
-
 void Achurar_region_no_factible(vsr::Screen* window, PSR::Ecuation* ecuacion, vsr::Color* color, GraphParameters& params) {
     // Obtener los coeficientes de la ecuación
     float a = ecuacion->get_x1();
