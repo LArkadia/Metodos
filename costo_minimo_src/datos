@@ -1,8 +1,9 @@
 -- Oferta de los almacenes
-15 25 5
+250 250 250 250
 -- Demanda de los clientes
-5 15 15 10
+300 175 325 130 70
 -- Costos de envio cliente - description
-10 0 20 11
-12 7 9 20
-0 14 16 18
+14 10 8 10 12
+20 5 9 12 18
+15 16 8 5 10
+9 10 20 8 18
