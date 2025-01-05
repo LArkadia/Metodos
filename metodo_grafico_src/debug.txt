@@ -1,0 +1,180 @@
+Intersección encontrada: (36, -54)
+Intersección encontrada: (-16.8, 25.2)
+Intersección encontrada: (16, -24)
+Intersección encontrada: (3, 12)
+Intersección encontrada: (6, 6)
+Intersección encontrada: (4.28571, 11.1429)
+Evaluando punto (36, -54) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (36, -54) contra ecuación 2: -90 < 42 -> Cumple
+Evaluando punto (36, -54) contra ecuación 3: 54 < 24 -> No cumple con <
+Evaluando punto (-16.8, 25.2) contra ecuación 1: -8.4 > 18 -> No cumple con >
+Evaluando punto (16, -24) contra ecuación 1: 8 > 18 -> No cumple con >
+Evaluando punto (3, 12) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (3, 12) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (3, 12) contra ecuación 3: 21 < 24 -> Cumple
+Punto factible: (3, 12)
+Añadido a puntos_factibles.
+Evaluando punto (6, 6) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (6, 6) contra ecuación 2: 30 < 42 -> Cumple
+Evaluando punto (6, 6) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (6, 6)
+Añadido a puntos_factibles.
+Evaluando punto (4.28571, 11.1429) contra ecuación 1: 19.7143 > 18 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (4.28571, 11.1429)
+Añadido a puntos_factibles.
+Punto de maximización: (4.28571, 11.1429)
+Punto de minimización: (6, 6)
+Círculo rojo dibujado en (234, 446)
+Círculo azul dibujado en (304, 596)
+Intersección encontrada: (36, -54)
+Intersección encontrada: (-16.8, 25.2)
+Intersección encontrada: (16, -24)
+Intersección encontrada: (3, 12)
+Intersección encontrada: (6, 6)
+Intersección encontrada: (4.28571, 11.1429)
+Evaluando punto (36, -54) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (36, -54) contra ecuación 2: -90 < 42 -> Cumple
+Evaluando punto (36, -54) contra ecuación 3: 54 < 24 -> No cumple con <
+Evaluando punto (-16.8, 25.2) contra ecuación 1: -8.4 > 18 -> No cumple con >
+Evaluando punto (16, -24) contra ecuación 1: 8 > 18 -> No cumple con >
+Evaluando punto (3, 12) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (3, 12) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (3, 12) contra ecuación 3: 21 < 24 -> Cumple
+Punto factible: (3, 12)
+Añadido a puntos_factibles.
+Evaluando punto (6, 6) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (6, 6) contra ecuación 2: 30 < 42 -> Cumple
+Evaluando punto (6, 6) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (6, 6)
+Añadido a puntos_factibles.
+Evaluando punto (4.28571, 11.1429) contra ecuación 1: 19.7143 > 18 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (4.28571, 11.1429)
+Añadido a puntos_factibles.
+Punto de maximización: (4.28571, 11.1429)
+Punto de minimización: (6, 6)
+Círculo rojo dibujado en (234, 446)
+Círculo azul dibujado en (304, 596)
+Intersección encontrada: (36, -54)
+Intersección encontrada: (-16.8, 25.2)
+Intersección encontrada: (16, -24)
+Intersección encontrada: (3, 12)
+Intersección encontrada: (6, 6)
+Intersección encontrada: (4.28571, 11.1429)
+Evaluando punto (36, -54) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (36, -54) contra ecuación 2: -90 < 42 -> Cumple
+Evaluando punto (36, -54) contra ecuación 3: 54 < 24 -> No cumple con <
+Evaluando punto (-16.8, 25.2) contra ecuación 1: -8.4 > 18 -> No cumple con >
+Evaluando punto (16, -24) contra ecuación 1: 8 > 18 -> No cumple con >
+Evaluando punto (3, 12) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (3, 12) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (3, 12) contra ecuación 3: 21 < 24 -> Cumple
+Punto factible: (3, 12)
+Añadido a puntos_factibles.
+Evaluando punto (6, 6) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (6, 6) contra ecuación 2: 30 < 42 -> Cumple
+Evaluando punto (6, 6) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (6, 6)
+Añadido a puntos_factibles.
+Evaluando punto (4.28571, 11.1429) contra ecuación 1: 19.7143 > 18 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (4.28571, 11.1429)
+Añadido a puntos_factibles.
+Punto de maximización: (4.28571, 11.1429)
+Punto de minimización: (6, 6)
+Círculo rojo dibujado en (234, 446)
+Círculo azul dibujado en (304, 596)
+Intersección encontrada: (36, -54)
+Intersección encontrada: (-16.8, 25.2)
+Intersección encontrada: (16, -24)
+Intersección encontrada: (3, 12)
+Intersección encontrada: (6, 6)
+Intersección encontrada: (4.28571, 11.1429)
+Evaluando punto (36, -54) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (36, -54) contra ecuación 2: -90 < 42 -> Cumple
+Evaluando punto (36, -54) contra ecuación 3: 54 < 24 -> No cumple con <
+Evaluando punto (-16.8, 25.2) contra ecuación 1: -8.4 > 18 -> No cumple con >
+Evaluando punto (16, -24) contra ecuación 1: 8 > 18 -> No cumple con >
+Evaluando punto (3, 12) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (3, 12) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (3, 12) contra ecuación 3: 21 < 24 -> Cumple
+Punto factible: (3, 12)
+Añadido a puntos_factibles.
+Evaluando punto (6, 6) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (6, 6) contra ecuación 2: 30 < 42 -> Cumple
+Evaluando punto (6, 6) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (6, 6)
+Añadido a puntos_factibles.
+Evaluando punto (4.28571, 11.1429) contra ecuación 1: 19.7143 > 18 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (4.28571, 11.1429)
+Añadido a puntos_factibles.
+Punto de maximización: (4.28571, 11.1429)
+Punto de minimización: (6, 6)
+Círculo rojo dibujado en (234, 446)
+Círculo azul dibujado en (304, 596)
+Intersección encontrada: (36, -54)
+Intersección encontrada: (-16.8, 25.2)
+Intersección encontrada: (16, -24)
+Intersección encontrada: (3, 12)
+Intersección encontrada: (6, 6)
+Intersección encontrada: (4.28571, 11.1429)
+Evaluando punto (36, -54) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (36, -54) contra ecuación 2: -90 < 42 -> Cumple
+Evaluando punto (36, -54) contra ecuación 3: 54 < 24 -> No cumple con <
+Evaluando punto (-16.8, 25.2) contra ecuación 1: -8.4 > 18 -> No cumple con >
+Evaluando punto (16, -24) contra ecuación 1: 8 > 18 -> No cumple con >
+Evaluando punto (3, 12) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (3, 12) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (3, 12) contra ecuación 3: 21 < 24 -> Cumple
+Punto factible: (3, 12)
+Añadido a puntos_factibles.
+Evaluando punto (6, 6) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (6, 6) contra ecuación 2: 30 < 42 -> Cumple
+Evaluando punto (6, 6) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (6, 6)
+Añadido a puntos_factibles.
+Evaluando punto (4.28571, 11.1429) contra ecuación 1: 19.7143 > 18 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (4.28571, 11.1429)
+Añadido a puntos_factibles.
+Punto de maximización: (4.28571, 11.1429)
+Punto de minimización: (6, 6)
+Círculo rojo dibujado en (234, 446)
+Círculo azul dibujado en (304, 596)
+Intersección encontrada: (36, -54)
+Intersección encontrada: (-16.8, 25.2)
+Intersección encontrada: (16, -24)
+Intersección encontrada: (3, 12)
+Intersección encontrada: (6, 6)
+Intersección encontrada: (4.28571, 11.1429)
+Evaluando punto (36, -54) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (36, -54) contra ecuación 2: -90 < 42 -> Cumple
+Evaluando punto (36, -54) contra ecuación 3: 54 < 24 -> No cumple con <
+Evaluando punto (-16.8, 25.2) contra ecuación 1: -8.4 > 18 -> No cumple con >
+Evaluando punto (16, -24) contra ecuación 1: 8 > 18 -> No cumple con >
+Evaluando punto (3, 12) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (3, 12) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (3, 12) contra ecuación 3: 21 < 24 -> Cumple
+Punto factible: (3, 12)
+Añadido a puntos_factibles.
+Evaluando punto (6, 6) contra ecuación 1: 18 > 18 -> Cumple
+Evaluando punto (6, 6) contra ecuación 2: 30 < 42 -> Cumple
+Evaluando punto (6, 6) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (6, 6)
+Añadido a puntos_factibles.
+Evaluando punto (4.28571, 11.1429) contra ecuación 1: 19.7143 > 18 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 2: 42 < 42 -> Cumple
+Evaluando punto (4.28571, 11.1429) contra ecuación 3: 24 < 24 -> Cumple
+Punto factible: (4.28571, 11.1429)
+Añadido a puntos_factibles.
+Punto de maximización: (4.28571, 11.1429)
+Punto de minimización: (6, 6)
+Círculo rojo dibujado en (234, 446)
+Círculo azul dibujado en (304, 596)
